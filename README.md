@@ -47,3 +47,9 @@ for **Backend**:
 1. Clone this repository and enter the `backend` directory
 2. Install the dependencies by running `yarn`
 3. Start the project by running `yarn start`
+
+**Database Model**
+<p align="center">
+  <img src="./dbmodel/dbmodel.png" width="100%" height="auto">
+</p>
+
