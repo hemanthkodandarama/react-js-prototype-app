@@ -24,7 +24,7 @@ Technology stack:
 1. **TypeScript**
 2. **NodeJS** with **Express.js / AWS Serverless-Express** framework
 3. **TypeORM**
-4. **MySQL** database
+4. **MySQL/SQLLite** database
 5. **RESTful API** with **Basic** & **JWT Authentication**
 7. **Unit Testing** using **Mocha** and **Chai**
 
