@@ -32,7 +32,7 @@ Technology stack:
 
 - **yarn** v1.17+
 - **NodeJS** v8+
-- **MySQL** v5.6+
+- **MySQL/SQLLite** v5.6+
 
 ## Installation
 
