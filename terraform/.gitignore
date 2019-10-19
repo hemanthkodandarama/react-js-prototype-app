@@ -1,0 +1,8 @@
+test/
+.terraform
+*.tfstate
+*.tfvars
+*.backup
+state.tf
+*.env
+*.zip

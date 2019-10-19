@@ -1,0 +1,30 @@
+FROM node:10-alpine
+
+
+RUN apk update && \
+  apk upgrade && \
+  apk add bash jq unzip py-pip zip git curl wget && \
+  pip install awscli
+
+RUN wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip && \
+   mkdir ./terraform && unzip -o terraform_0.11.11_linux_amd64.zip -d ./terraform && \
+   install terraform/terraform /usr/local/bin
+
+RUN mkdir -p /opt/app
+WORKDIR /opt/app
+
+ADD buildinfo.json version.json
+ADD terraform.zip terraform.zip
+ADD frontend.zip frontend.zip
+ADD *.sh ./
+
+RUN chmod +x ./*.sh
+
+RUN mkdir -p /opt/app/middleware
+ADD middleware middleware
+
+ADD .npmrc .npmrc
+
+RUN cp .npmrc ~/.npmrc && cd middleware && npm install && npm run build && mv node_modules dist
+
+ENTRYPOINT ["./deploy.sh"]

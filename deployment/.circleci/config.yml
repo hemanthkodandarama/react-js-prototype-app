@@ -1,0 +1,130 @@
+version: 2
+jobs:
+  test-frontend:
+    docker:
+      - image: circleci/node:8-browsers
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - node-{{ checksum "frontend/package.json" }}
+
+      - run:
+          name: Set up npm
+          command: |
+            npm config set @replicon:registry=https://replicon.myget.org/F/replicon/npm/
+            npm set //replicon.myget.org/F/replicon/npm/:_password $(printf $REPLICON_MYGET_PASSWORD | base64)
+            npm set //replicon.myget.org/F/replicon/npm/:username $REPLICON_MYGET_USERNAME
+            npm set //replicon.myget.org/F/replicon/npm/:email $REPLICON_MYGET_EMAIL
+            npm set //replicon.myget.org/F/replicon/npm/:always-auth true
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm install codecov
+            cd frontend
+            npm install
+
+      - save_cache:
+          key: node-{{ checksum "frontend/package.json" }}
+          paths:
+            - ./frontend/node_modules
+
+      - run:
+          name: Run tests
+          command: |
+            cd frontend
+            npm run coverage:ci
+
+      - run:
+          name: Upload coverage
+          command: node_modules/.bin/codecov
+
+  test-middleware:
+    docker:
+      - image: circleci/node:8-browsers
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - node-v3-{{ checksum "middleware/package.json" }}
+
+      - run:
+          name: Set up npm
+          command: |
+            npm config set @replicon:registry=https://replicon.myget.org/F/replicon/npm/
+            npm set //replicon.myget.org/F/replicon/npm/:_password $(printf $REPLICON_MYGET_PASSWORD | base64)
+            npm set //replicon.myget.org/F/replicon/npm/:username $REPLICON_MYGET_USERNAME
+            npm set //replicon.myget.org/F/replicon/npm/:email $REPLICON_MYGET_EMAIL
+            npm set //replicon.myget.org/F/replicon/npm/:always-auth true
+
+      - run:
+          name: Install dependencies
+          command: |
+            npm install codecov
+            cd middleware
+            npm install
+
+      - save_cache:
+          key: node-v3-{{ checksum "middleware/package.json" }}
+          paths:
+            - ./middleware/node_modules
+
+      - run:
+          name: Run tests
+          command: |
+            cd middleware
+            npm run coverage
+
+      - run:
+          name: Upload coverage
+          command: node_modules/.bin/codecov
+
+  build-branch:
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - restore_cache:
+          keys:
+            - node-fe-{{ checksum "frontend/package.json" }}
+            - node-mid-{{ checksum "middleware/package.json" }}
+
+      - run:
+          command: |
+            if [ $CIRCLE_BRANCH != "master" ]; then
+              export PATH="/home/circleci/.local/bin:$PATH"
+              export BRANCH_VERSION="$CIRCLE_BUILD_NUM-$CIRCLE_BRANCH"
+              chmod +x ./branch_build.sh
+              ./branch_build.sh
+            fi
+
+      - save_cache:
+          key: node-fe-{{ checksum "frontend/package.json" }}
+          paths:
+            - ./frontend/node_modules
+
+      - save_cache:
+          key: node-mid-{{ checksum "middleware/package.json" }}
+          paths:
+            - ./middleware/node_modules
+
+workflows:
+  version: 2
+  test-frontend:
+    jobs:
+      - test-frontend
+  test-middleware:
+    jobs:
+      - test-middleware
+  build-branch:
+    jobs:
+      - build-branch
