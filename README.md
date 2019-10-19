@@ -53,3 +53,8 @@ for **Backend**:
   <img src="./dbmodel/dbmodel.png" width="100%" height="auto">
 </p>
 
+## Admin Account
+
+- ADMIN_LOGIN=3323
+- ADMIN_PASSWORD=root
+
