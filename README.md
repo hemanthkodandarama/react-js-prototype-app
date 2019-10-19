@@ -49,12 +49,32 @@ for **Backend**:
 3. Start the project by running `yarn start`
 
 **Database Model**
-<p align="center">
+<p align="left">
   <img src="./dbmodel/dbmodel.png" width="100%" height="auto">
+</p>
+
+**UI Screen **
+<p align="left">
+  <img src="./dbmodel/ScreenDemo.PNG" width="100%" height="auto">
 </p>
 
 ## Admin Account
 
 - ADMIN_LOGIN=3323
 - ADMIN_PASSWORD=root
+
+## Graphql
+GraphQL is a query language, an execution engine, and a specification, and it's leading developers to rethink how they build client and API applications.
+
+**Excecution Flow**
+<p align="left">
+  <img src="./dbmodel/graphql-flow.png" width="200px" height="300px">
+</p>
+
+**graphi query ui**
+<p align="left">
+  <img src="./dbmodel/GraphqlCapture.PNG" width="100%" height="auto">
+</p>
+
+
 
